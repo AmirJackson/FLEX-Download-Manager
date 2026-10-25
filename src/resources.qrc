@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>app.ico</file>
+        <file>icons/chevron-down.png</file>
+        <file>icons/chevron-up.png</file>
+        <file>icons/check.png</file>
+        <file>icons/check@2x.png</file>
+        <file>fonts/FluentSystemIcons-Subset.ttf</file>
+    </qresource>
+</RCC>
