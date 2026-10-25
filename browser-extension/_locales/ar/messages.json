@@ -1,0 +1,110 @@
+{
+  "extName": {
+    "message": "FLEX Download Manager"
+  },
+  "extDescription": {
+    "message": "أرسل تنزيلات Chrome إلى تطبيق FLEX Download Manager."
+  },
+  "contextDownload": {
+    "message": "تنزيل باستخدام FLEX Download Manager"
+  },
+  "popupConnected": {
+    "message": "متصل بـ FLEX Download Manager"
+  },
+  "popupOffline": {
+    "message": "FLEX Download Manager غير قيد التشغيل"
+  },
+  "popupHintOnline": {
+    "message": "تُفتح تنزيلات Chrome في مربع حوار معلومات ملف التنزيل."
+  },
+  "popupHintOffline": {
+    "message": "شغّل التطبيق ثم اضغط على إعادة الفحص."
+  },
+  "popupChecking": {
+    "message": "جارٍ الفحص…"
+  },
+  "savePromptTip": {
+    "message": "قد يعرض Chrome مربع حفظ الملف الخاص به. أوقف خيار «اسأل عن مكان حفظ كل ملف قبل التنزيل» ليظهر مربع FLEX Download Manager فقط."
+  },
+  "openDownloadSettings": {
+    "message": "فتح إعدادات التنزيل في Chrome"
+  },
+  "settingsOpenFailed": {
+    "message": "افتح chrome://settings/downloads يدوياً وأوقف خيار سؤال الحفظ."
+  },
+  "autoCapture": {
+    "message": "التقاط تنزيلات Chrome"
+  },
+  "autoCaptureHint": {
+    "message": "عند الإيقاف، تبقى التنزيلات في Chrome."
+  },
+  "checkAgain": {
+    "message": "إعادة الفحص"
+  },
+  "appOffTitle": {
+    "message": "FLEX Download Manager غير قيد التشغيل"
+  },
+  "appOffMessage": {
+    "message": "شغّل التطبيق لاستخدام مربع حوار التنزيل."
+  },
+  "mediaPanel": {
+    "message": "إظهار لوحة تنزيل الوسائط"
+  },
+  "mediaPanelHint": {
+    "message": "تعرض زر «تنزيل هذا الفيديو» فوق الفيديو والوسائط الصوتية."
+  },
+  "panelToolbar": {
+    "message": "لوحة تنزيل الوسائط"
+  },
+  "panelVideo": {
+    "message": "تنزيل هذا الفيديو"
+  },
+  "panelAudio": {
+    "message": "تنزيل هذا الصوت"
+  },
+  "panelQuality": {
+    "message": "الجودة"
+  },
+  "panelHelp": {
+    "message": "مساعدة"
+  },
+  "panelClose": {
+    "message": "إغلاق"
+  },
+  "panelSending": {
+    "message": "جارٍ الإرسال إلى FLEX Download Manager…"
+  },
+  "panelSent": {
+    "message": "تمت إضافة التنزيل إلى التطبيق."
+  },
+  "panelOffline": {
+    "message": "FLEX Download Manager غير قيد التشغيل."
+  },
+  "panelRejected": {
+    "message": "رفض التطبيق هذا التنزيل. تحقّق من إعداداته ثم حاول مرة أخرى."
+  },
+  "panelBridgeUnavailable": {
+    "message": "تعذّر على إضافة المتصفح الوصول إلى التطبيق. أعد تحميل الإضافة من chrome://extensions ثم أعد تحميل هذه الصفحة وحاول مرة أخرى."
+  },
+  "panelNoSource": {
+    "message": "لم يُعثر على رابط وسائط مباشر بعد. شغّل الفيديو ثم اضغط على اللوحة مرة أخرى."
+  },
+  "panelExtracting": {
+    "message": "جارٍ استخراج جودات الفيديو…"
+  },
+  "panelExtractFailed": {
+    "message": "تعذّر قراءة جودات هذا الفيديو. تأكّد من وجود yt-dlp.exe بجانب التطبيق."
+  },
+  "panelHelpText": {
+    "message": "اضغط على اللوحة لاختيار الدقة. تُعالج مواقع يوتيوب والتواصل الاجتماعي بواسطة yt-dlp، لذا تظهر جميع الدقات؛ وأول تنزيل بدقة 1080p أو أعلى يثبّت ffmpeg تلقائيًا."
+  },
+  "panelOriginal": {
+    "message": "الأصلي"
+  },
+  "panelAudioQuality": {
+    "message": "صوت"
+  },
+  "version": {
+    "message": "الإصدار"
+  }
+}

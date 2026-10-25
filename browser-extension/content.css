@@ -1,0 +1,11 @@
+/* Keep the panel host isolated from page styles. The panel itself lives in a
+   shadow root created by content.js. */
+[data-flex-media-panel-host] {
+  all: initial !important;
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+}

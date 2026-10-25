@@ -1,0 +1,110 @@
+{
+  "extName": {
+    "message": "FLEX Download Manager"
+  },
+  "extDescription": {
+    "message": "Send Chrome downloads to the FLEX Download Manager desktop app."
+  },
+  "contextDownload": {
+    "message": "Download with FLEX Download Manager"
+  },
+  "popupConnected": {
+    "message": "Connected to FLEX Download Manager"
+  },
+  "popupOffline": {
+    "message": "FLEX Download Manager is not running"
+  },
+  "popupHintOnline": {
+    "message": "Chrome downloads open in the Download File Info dialog."
+  },
+  "popupHintOffline": {
+    "message": "Start the desktop app, then click Check again."
+  },
+  "popupChecking": {
+    "message": "Checking…"
+  },
+  "savePromptTip": {
+    "message": "Chrome can show its own Save As dialog. Turn off “Ask where to save each file before downloading” so only the FLEX Download Manager dialog appears."
+  },
+  "openDownloadSettings": {
+    "message": "Open Chrome download settings"
+  },
+  "settingsOpenFailed": {
+    "message": "Open chrome://settings/downloads manually and turn off the Save As prompt."
+  },
+  "autoCapture": {
+    "message": "Capture Chrome downloads"
+  },
+  "autoCaptureHint": {
+    "message": "When off, downloads stay in Chrome."
+  },
+  "checkAgain": {
+    "message": "Check again"
+  },
+  "appOffTitle": {
+    "message": "FLEX Download Manager is not running"
+  },
+  "appOffMessage": {
+    "message": "Start the desktop app to use the download dialog."
+  },
+  "mediaPanel": {
+    "message": "Show media download panel"
+  },
+  "mediaPanelHint": {
+    "message": "Shows a Download this video button over videos and audio."
+  },
+  "panelToolbar": {
+    "message": "Media download panel"
+  },
+  "panelVideo": {
+    "message": "Download this video"
+  },
+  "panelAudio": {
+    "message": "Download this audio"
+  },
+  "panelQuality": {
+    "message": "Quality"
+  },
+  "panelHelp": {
+    "message": "Help"
+  },
+  "panelClose": {
+    "message": "Close"
+  },
+  "panelSending": {
+    "message": "Sending to FLEX Download Manager..."
+  },
+  "panelSent": {
+    "message": "Download added to the desktop app."
+  },
+  "panelOffline": {
+    "message": "FLEX Download Manager is not running."
+  },
+  "panelRejected": {
+    "message": "The desktop app refused this download. Check its settings and try again."
+  },
+  "panelBridgeUnavailable": {
+    "message": "The browser extension could not reach the desktop app. Reload the extension in chrome://extensions, reload this page, then try again."
+  },
+  "panelNoSource": {
+    "message": "No direct media link was detected yet. Start the video, then click the panel again."
+  },
+  "panelExtracting": {
+    "message": "Extracting video qualities…"
+  },
+  "panelExtractFailed": {
+    "message": "Could not read this video's qualities. Make sure yt-dlp.exe is next to the desktop app."
+  },
+  "panelHelpText": {
+    "message": "Click the panel to choose a quality. YouTube and other social sites are handled by yt-dlp, so every resolution is listed; the first 1080p+ download also installs ffmpeg."
+  },
+  "panelOriginal": {
+    "message": "Original"
+  },
+  "panelAudioQuality": {
+    "message": "Audio"
+  },
+  "version": {
+    "message": "Version"
+  }
+}

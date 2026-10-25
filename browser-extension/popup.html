@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FLEX Download Manager</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="header">
+    <img src="icons/icon48.png" alt="" width="32" height="32">
+    <div class="title" data-i18n="extName">FLEX Download Manager</div>
+  </header>
+
+  <section class="status-card">
+    <div class="status-line">
+      <span id="status-dot" class="dot checking"></span>
+      <span id="status-text" class="status" data-i18n="popupChecking">Checking…</span>
+    </div>
+    <div id="status-hint" class="hint"></div>
+  </section>
+
+  <label class="toggle">
+    <input id="auto-capture" type="checkbox" checked>
+    <span>
+      <span class="toggle-title" data-i18n="autoCapture">Capture Chrome downloads</span>
+      <span class="toggle-hint" data-i18n="autoCaptureHint">When off, downloads stay in Chrome.</span>
+    </span>
+  </label>
+
+  <label class="toggle">
+    <input id="media-panel" type="checkbox" checked>
+    <span>
+      <span class="toggle-title" data-i18n="mediaPanel">Show media download panel</span>
+      <span class="toggle-hint" data-i18n="mediaPanelHint">Shows a Download this video button over videos and audio.</span>
+    </span>
+  </label>
+
+  <section class="tip">
+    <div id="save-prompt-tip-text" class="tip-text" data-i18n="savePromptTip">
+      Chrome can show its own Save As dialog. Turn off “Ask where to save each
+      file before downloading” so only the FLEX Download Manager dialog appears.
+    </div>
+    <button id="open-download-settings" class="link-button" type="button"
+            data-i18n="openDownloadSettings">
+      Open Chrome download settings
+    </button>
+  </section>
+
+  <footer class="footer">
+    <button id="check-again" type="button" data-i18n="checkAgain">Check again</button>
+    <span id="version" class="version"></span>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>
