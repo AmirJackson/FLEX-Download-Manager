@@ -16,7 +16,7 @@ jobs:
     - name: Set up MSBuild / Visual Studio
       uses: microsoft/setup-msbuild@v2
 
-    - name: Install Qt (Required for UI)
+    - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
         version: '6.8.3'
@@ -25,22 +25,30 @@ jobs:
         arch: 'win64_msvc2022_64'
         modules: 'qtmultimedia qtwebengine'
 
-    - name: Compile with Windows 7 Subsystem Targets
+    - name: Compile Project for Windows 7
       run: |
-        # The repository uses a build.bat script. We can run it and pass extra compiler/linker flags
-        # targeting Windows 7 (SUBSYSTEM:WINDOWS,6.1)
+        # Navigate into the src folder where the project configuration is located
+        cd src
         
-        Write-Host "Running native build.bat..."
+        Write-Host "Running qmake..."
+        qmake
         
-        # If build.bat exists, invoke it with environment variables enforcing Win7 targets
+        # Configure MSVC environment variables to force Windows 7 (0x0601) compatibility targets
         $env:CL = "/DWINVER=0x0601 /D_WIN32_WINNT=0x0601"
         $env:LINK = "/SUBSYSTEM:WINDOWS,6.1"
         
-        if (Test-Path "build.bat") {
-            cmd /c build.bat
+        Write-Host "Building project with nmake..."
+        nmake Release
+
+    - name: Bundle Qt Dependencies (windeployqt)
+      run: |
+        cd src
+        $exe = Get-ChildItem -Recurse -Filter "FLEX Download Manager.exe" | Select-Object -First 1
+        if ($exe) {
+            Write-Host "Deploying Qt dependencies to: $($exe.FullName)"
+            windeployqt --release --no-translations $exe.FullName
         } else {
-            Write-Error "build.bat not found in repository root."
-            exit 1
+            Write-Warning "Executable not found automatically, checking release folder..."
         }
 
     - name: Upload Windows 7 Compatible Artifact
@@ -48,6 +56,7 @@ jobs:
       with:
         name: FLEX-Download-Manager-Win7
         path: |
-          build/*.exe
-          *.exe
+          src/**/*.exe
+          src/**/release/*.exe
+          src/release/*.exe
         if-no-files-found: ignore
