@@ -1,5 +1,4 @@
-
-name: Build FLEX-Download-Manager Executable
+name: Build FLEX-Download-Manager (Qt/qmake)
 
 on:
   push:
@@ -14,31 +13,47 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
+    # 1. Install Qt (Required for Qt Widgets C++ apps)
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '6.5.3' # Change this if the project specifies a different Qt version
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2022_64'
+        modules: 'qtmultimedia qtwebengine' # Add extra modules if required by the app
+
+    # 2. Configure MSBuild for Windows compilation
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2
 
-    - name: Build Project
+    # 3. Build using qmake / Visual Studio project files
+    - name: Compile Project
       run: |
-        # Check if there is a Visual Studio Solution (.sln) file in the root
-        $sln = Get-ChildItem -Filter *.sln
-        if ($sln) {
-            Write-Host "Building Visual Studio Solution: $($sln.Name)"
-            msbuild $sln.Name /p:Configuration=Release /p:Platform="x64"
-        }
-        else {
-            Write-Host "Building with CMake if available..."
-            mkdir build
-            cd build
-            cmake .. -DCMAKE_BUILD_TYPE=Release
-            cmake --build . --config Release
+        # If the project uses a .pro file:
+        qmake
+        nmake Release
+        
+        # OR if qmake generates a Visual Studio solution (.sln):
+        # $sln = Get-ChildItem -Filter *.sln
+        # msbuild $sln.Name /p:Configuration=Release /p:Platform="x64"
+
+    # 4. Package dependencies using windeployqt so the .exe runs standalone
+    - name: Deploy Qt Dependencies
+      run: |
+        # Find and run windeployqt to bundle DLLs
+        $exe = Get-ChildItem -Recurse -Filter "*.exe" | Select-Object -First 1
+        if ($exe) {
+            windeployqt --release --no-translations $exe.FullName
         }
 
+    # 5. Upload the final Windows build
     - name: Upload Executable Artifact
       uses: actions/upload-artifact@v4
       with:
         name: FLEX-Download-Manager-Windows
         path: |
-          **/*.exe
-          build/Release/*.exe
+          release/*.exe
           x64/Release/*.exe
+          build/Release/*.exe
         if-no-files-found: ignore
