@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest  # Cloud Windows runner
+    runs-on: windows-latest
 
     steps:
     - name: Checkout Repository
@@ -16,10 +16,10 @@ jobs:
     - name: Set up MSBuild / Visual Studio
       uses: microsoft/setup-msbuild@v2
 
-    - name: Install Qt (Required for Qt Widgets UI)
+    - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
-        version: '6.8.3' # Matches project recommendation
+        version: '6.8.3'
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2022_64'
@@ -29,12 +29,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        # Force the target OS version to Windows 7 (6.1) and set linker subsystem
-        cmake .. \
-          -DCMAKE_SYSTEM_VERSION=6.1 \
-          -DCMAKE_CXX_FLAGS="/DWINVER=0x0601 /D_WIN32_WINNT=0x0601" \
-          -DCMAKE_EXE_LINKER_FLAGS="/SUBSYSTEM:WINDOWS,6.1" \
-          -DCMAKE_BUILD_TYPE=Release
+        cmake .. -DCMAKE_SYSTEM_VERSION=6.1 "-DCMAKE_CXX_FLAGS=/DWINVER=0x0601 /D_WIN32_WINNT=0x0601" "-DCMAKE_EXE_LINKER_FLAGS=/SUBSYSTEM:WINDOWS,6.1" -DCMAKE_BUILD_TYPE=Release
 
     - name: Build Executable
       run: |
@@ -42,13 +37,10 @@ jobs:
 
     - name: Bundle Dependencies with windeployqt
       run: |
-        # Locate the compiled executable and bundle required Qt DLLs
         $exe = Get-ChildItem -Path build -Recurse -Filter "FLEX Download Manager.exe" | Select-Object -First 1
         if ($exe) {
             Write-Host "Deploying dependencies for: $($exe.FullName)"
             windeployqt --release --no-translations $exe.FullName
-        } else {
-            Write-Host "Executable not found in build folder, checking root..."
         }
 
     - name: Upload Windows 7 Compatible Artifact
