@@ -13,9 +13,13 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Set up MSBuild / Visual Studio
-      uses: microsoft/setup-msbuild@v2
+    # 1. Setup MSVC Developer Environment (makes nmake, cl, link globally available)
+    - name: Setup MSVC Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
 
+    # 2. Install Qt
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
@@ -25,32 +29,35 @@ jobs:
         arch: 'win64_msvc2022_64'
         modules: 'qtmultimedia qtwebengine'
 
-    - name: Compile Project for Windows 7
+    # 3. Compile Project for Windows 7
+    - name: Compile Project with nmake
+      shell: cmd
       run: |
-        # Navigate into the src folder where the project configuration is located
+        REM Switch to the source directory using command prompt (cmd)
         cd src
         
-        Write-Host "Running qmake..."
+        echo Running qmake...
         qmake
         
-        # Configure MSVC environment variables to force Windows 7 (0x0601) compatibility targets
-        $env:CL = "/DWINVER=0x0601 /D_WIN32_WINNT=0x0601"
-        $env:LINK = "/SUBSYSTEM:WINDOWS,6.1"
+        REM Set compiler and linker flags for Windows 7 (0x0601 / subsystem 6.1)
+        set CL=/DWINVER=0x0601 /D_WIN32_WINNT=0x0601
+        set LINK=/SUBSYSTEM:WINDOWS,6.1
         
-        Write-Host "Building project with nmake..."
+        echo Building with nmake...
         nmake Release
 
-    - name: Bundle Qt Dependencies (windeployqt)
+    # 4. Bundle Qt Dependencies (windeployqt)
+    - name: Bundle Qt Dependencies
+      shell: pwsh
       run: |
         cd src
         $exe = Get-ChildItem -Recurse -Filter "FLEX Download Manager.exe" | Select-Object -First 1
         if ($exe) {
-            Write-Host "Deploying Qt dependencies to: $($exe.FullName)"
+            Write-Host "Deploying dependencies to: $($exe.FullName)"
             windeployqt --release --no-translations $exe.FullName
-        } else {
-            Write-Warning "Executable not found automatically, checking release folder..."
         }
 
+    # 5. Upload Windows 7 Compatible Artifact
     - name: Upload Windows 7 Compatible Artifact
       uses: actions/upload-artifact@v4
       with:
