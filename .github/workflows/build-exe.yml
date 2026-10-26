@@ -1,4 +1,4 @@
-name: Build FLEX-Download-Manager (Qt/qmake)
+name: Build for Windows 7
 
 on:
   push:
@@ -7,53 +7,55 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-latest  # Cloud Windows runner
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # 1. Install Qt (Required for Qt Widgets C++ apps)
-    - name: Install Qt
+    - name: Set up MSBuild / Visual Studio
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Install Qt (Required for Qt Widgets UI)
       uses: jurplel/install-qt-action@v3
       with:
-        version: '6.5.3' # Change this if the project specifies a different Qt version
+        version: '6.8.3' # Matches project recommendation
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2022_64'
-        modules: 'qtmultimedia qtwebengine' # Add extra modules if required by the app
+        modules: 'qtmultimedia qtwebengine'
 
-    # 2. Configure MSBuild for Windows compilation
-    - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v2
-
-    # 3. Build using qmake / Visual Studio project files
-    - name: Compile Project
+    - name: Configure CMake for Windows 7 Target
       run: |
-        # If the project uses a .pro file:
-        qmake
-        nmake Release
-        
-        # OR if qmake generates a Visual Studio solution (.sln):
-        # $sln = Get-ChildItem -Filter *.sln
-        # msbuild $sln.Name /p:Configuration=Release /p:Platform="x64"
+        mkdir build
+        cd build
+        # Force the target OS version to Windows 7 (6.1) and set linker subsystem
+        cmake .. \
+          -DCMAKE_SYSTEM_VERSION=6.1 \
+          -DCMAKE_CXX_FLAGS="/DWINVER=0x0601 /D_WIN32_WINNT=0x0601" \
+          -DCMAKE_EXE_LINKER_FLAGS="/SUBSYSTEM:WINDOWS,6.1" \
+          -DCMAKE_BUILD_TYPE=Release
 
-    # 4. Package dependencies using windeployqt so the .exe runs standalone
-    - name: Deploy Qt Dependencies
+    - name: Build Executable
       run: |
-        # Find and run windeployqt to bundle DLLs
-        $exe = Get-ChildItem -Recurse -Filter "*.exe" | Select-Object -First 1
+        cmake --build build --config Release
+
+    - name: Bundle Dependencies with windeployqt
+      run: |
+        # Locate the compiled executable and bundle required Qt DLLs
+        $exe = Get-ChildItem -Path build -Recurse -Filter "FLEX Download Manager.exe" | Select-Object -First 1
         if ($exe) {
+            Write-Host "Deploying dependencies for: $($exe.FullName)"
             windeployqt --release --no-translations $exe.FullName
+        } else {
+            Write-Host "Executable not found in build folder, checking root..."
         }
 
-    # 5. Upload the final Windows build
-    - name: Upload Executable Artifact
+    - name: Upload Windows 7 Compatible Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: FLEX-Download-Manager-Windows
+        name: FLEX-Download-Manager-Win7
         path: |
-          release/*.exe
-          x64/Release/*.exe
-          build/Release/*.exe
+          build/**/*.exe
+          build/**/Release/*.exe
         if-no-files-found: ignore
