@@ -1,0 +1,44 @@
+
+name: Build FLEX-Download-Manager Executable
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Build Project
+      run: |
+        # Check if there is a Visual Studio Solution (.sln) file in the root
+        $sln = Get-ChildItem -Filter *.sln
+        if ($sln) {
+            Write-Host "Building Visual Studio Solution: $($sln.Name)"
+            msbuild $sln.Name /p:Configuration=Release /p:Platform="x64"
+        }
+        else {
+            Write-Host "Building with CMake if available..."
+            mkdir build
+            cd build
+            cmake .. -DCMAKE_BUILD_TYPE=Release
+            cmake --build . --config Release
+        }
+
+    - name: Upload Executable Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: FLEX-Download-Manager-Windows
+        path: |
+          **/*.exe
+          build/Release/*.exe
+          x64/Release/*.exe
+        if-no-files-found: ignore
