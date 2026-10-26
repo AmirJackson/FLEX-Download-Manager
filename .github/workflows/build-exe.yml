@@ -1,4 +1,4 @@
-name: Build for Windows 7
+name: Build FLEX-Download-Manager for Windows 7
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
     - name: Set up MSBuild / Visual Studio
       uses: microsoft/setup-msbuild@v2
 
-    - name: Install Qt
+    - name: Install Qt (Required for UI)
       uses: jurplel/install-qt-action@v3
       with:
         version: '6.8.3'
@@ -25,22 +25,22 @@ jobs:
         arch: 'win64_msvc2022_64'
         modules: 'qtmultimedia qtwebengine'
 
-    - name: Configure CMake for Windows 7 Target
+    - name: Compile with Windows 7 Subsystem Targets
       run: |
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_SYSTEM_VERSION=6.1 "-DCMAKE_CXX_FLAGS=/DWINVER=0x0601 /D_WIN32_WINNT=0x0601" "-DCMAKE_EXE_LINKER_FLAGS=/SUBSYSTEM:WINDOWS,6.1" -DCMAKE_BUILD_TYPE=Release
-
-    - name: Build Executable
-      run: |
-        cmake --build build --config Release
-
-    - name: Bundle Dependencies with windeployqt
-      run: |
-        $exe = Get-ChildItem -Path build -Recurse -Filter "FLEX Download Manager.exe" | Select-Object -First 1
-        if ($exe) {
-            Write-Host "Deploying dependencies for: $($exe.FullName)"
-            windeployqt --release --no-translations $exe.FullName
+        # The repository uses a build.bat script. We can run it and pass extra compiler/linker flags
+        # targeting Windows 7 (SUBSYSTEM:WINDOWS,6.1)
+        
+        Write-Host "Running native build.bat..."
+        
+        # If build.bat exists, invoke it with environment variables enforcing Win7 targets
+        $env:CL = "/DWINVER=0x0601 /D_WIN32_WINNT=0x0601"
+        $env:LINK = "/SUBSYSTEM:WINDOWS,6.1"
+        
+        if (Test-Path "build.bat") {
+            cmd /c build.bat
+        } else {
+            Write-Error "build.bat not found in repository root."
+            exit 1
         }
 
     - name: Upload Windows 7 Compatible Artifact
@@ -48,6 +48,6 @@ jobs:
       with:
         name: FLEX-Download-Manager-Win7
         path: |
-          build/**/*.exe
-          build/**/Release/*.exe
+          build/*.exe
+          *.exe
         if-no-files-found: ignore
