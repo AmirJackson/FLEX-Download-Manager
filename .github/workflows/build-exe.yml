@@ -13,7 +13,7 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # 1. Setup MSVC Developer Environment (makes nmake, cl, link globally available)
+    # 1. Setup MSVC Developer Environment
     - name: Setup MSVC Developer Command Prompt
       uses: ilammy/msvc-dev-cmd@v1
       with:
@@ -29,22 +29,21 @@ jobs:
         arch: 'win64_msvc2022_64'
         modules: 'qtmultimedia qtwebengine'
 
-    # 3. Compile Project for Windows 7
+    # 3. Configure and Compile Project for Windows 7
     - name: Compile Project with nmake
       shell: cmd
       run: |
-        REM Switch to the source directory using command prompt (cmd)
         cd src
         
-        echo Running qmake...
-        qmake
+        echo Running qmake in Release mode...
+        qmake CONFIG+=release
         
         REM Set compiler and linker flags for Windows 7 (0x0601 / subsystem 6.1)
         set CL=/DWINVER=0x0601 /D_WIN32_WINNT=0x0601
         set LINK=/SUBSYSTEM:WINDOWS,6.1
         
         echo Building with nmake...
-        nmake Release
+        nmake
 
     # 4. Bundle Qt Dependencies (windeployqt)
     - name: Bundle Qt Dependencies
