@@ -13,13 +13,13 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    # 1. Setup MSVC Developer Environment
-    - name: Setup MSVC Developer Command Prompt
+    # 1. Setup MSVC Developer Command Prompt (makes nmake, cl, link available)
+    - name: Setup MSVC Developer Environment
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: x64
 
-    # 2. Install Qt
+    # 2. Install Qt 6
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
@@ -29,23 +29,23 @@ jobs:
         arch: 'win64_msvc2022_64'
         modules: 'qtmultimedia qtwebengine'
 
-    # 3. Configure and Compile Project for Windows 7
-    - name: Compile Project with nmake
+    # 3. Configure and Build using qmake & nmake for Windows 7 (Subsystem 6.1)
+    - name: Build Project for Windows 7
       shell: cmd
       run: |
         cd src
         
-        echo Running qmake in Release mode...
+        echo Running qmake...
         qmake CONFIG+=release
         
-        REM Set compiler and linker flags for Windows 7 (0x0601 / subsystem 6.1)
+        REM Inject Windows 7 compatibility flags (0x0601) and target subsystem 6.1
         set CL=/DWINVER=0x0601 /D_WIN32_WINNT=0x0601
         set LINK=/SUBSYSTEM:WINDOWS,6.1
         
         echo Building with nmake...
         nmake
 
-    # 4. Bundle Qt Dependencies (windeployqt)
+    # 4. Bundle Qt DLLs using windeployqt
     - name: Bundle Qt Dependencies
       shell: pwsh
       run: |
@@ -56,8 +56,8 @@ jobs:
             windeployqt --release --no-translations $exe.FullName
         }
 
-    # 5. Upload Windows 7 Compatible Artifact
-    - name: Upload Windows 7 Compatible Artifact
+    # 5. Upload Windows 7 Compatible Executable
+    - name: Upload Windows 7 Artifact
       uses: actions/upload-artifact@v4
       with:
         name: FLEX-Download-Manager-Win7
